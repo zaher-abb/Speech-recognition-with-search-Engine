@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+a:link, a:visited {
+  background-color: white;
+  color: black;
+  border: 2px solid green;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+}
+
+a:hover, a:active {
+  background-color: green;
+  color: white;
+}
+</style>
+</head>
+<body>
+
+
+<h2>your Text is : </h2>
+<p>{{spoken_text}}</p>
+
+{% for link in links %}
+<a href="{{ link }}">{{ link }}</a>
+{% endfor %}
+
+
+
+<a href="{% url 'speech_recognition:voice_recorder_HomePage' %}" target="_blank">New Recorde </a>
+
+
+
+</body>
+</html>
