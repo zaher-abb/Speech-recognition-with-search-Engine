@@ -49,9 +49,9 @@ def speech_recognition(language):
         audio = r.record(source)
     mytext = ''
     try:
-        if (language == 'Deutsch'):
-            mytext = r.recognize_google(audio, language='de-DE')
-        elif ((language == 'English')):
+        if(language=='Deutsch'):
+          mytext = r.recognize_google(audio, language='de-DE')
+        elif((language=='English')):
             mytext = r.recognize_google(audio)
     except Exception as exp:
         print(exp)
