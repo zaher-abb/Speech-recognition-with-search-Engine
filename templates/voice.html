@@ -26,14 +26,18 @@
 <html>
 <body>
 
-<form action="voice_recorder">
-    {% csrf_token %}
-  <label >Duration:</label><br>
+
+<form action="voice_recorder_page">
+      {% csrf_token %}
+
+  <p>Please select your language:</p>
+  <input type="radio" id="English" name="language" value="English">
+  <label for="English">English</label><br>
+  <input type="radio" id="Deutsch" name="language" value="Deutsch">
+  <label for="Deutsch">Deutsch</label><br>
     <input type="number" name="Duration" >
+ <input class="button button2" type="submit" value="Submit">start recording </input>
 
-  <input class="button button2" type="submit" value="Submit">start recording </input>
 </form>
-
-
 </body>
 </html>

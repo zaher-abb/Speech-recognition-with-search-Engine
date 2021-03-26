@@ -19,7 +19,7 @@ def voice_recorder(request):
 
     # Recording duration
     duration = int(request.GET['Duration'])
-
+    language = request.GET['language']
     # Start recorder with the given values
     # of duration and sample frequency
     recording = sd.rec(int(duration * freq),
@@ -30,7 +30,7 @@ def voice_recorder(request):
 
     wavio.write("myrecording.wav", recording, freq, sampwidth=2)
 
-    spoken_text = speech_recognition()
+    spoken_text = speech_recognition(language)
 
     words_list = re.sub("[^\w]", " ", spoken_text).split()
     links_list = []
@@ -42,14 +42,17 @@ def voice_recorder(request):
     return render(request, 'test.html', {'spoken_text': spoken_text, 'links': links_list})
 
 
-def speech_recognition():
+def speech_recognition(language):
     r = sr.Recognizer()
     myaudio = sr.AudioFile('myrecording.wav')
     with myaudio as source:
         audio = r.record(source)
     mytext = ''
     try:
-        mytext = r.recognize_google(audio)
+        if (language == 'Deutsch'):
+            mytext = r.recognize_google(audio, language='de-DE')
+        elif ((language == 'English')):
+            mytext = r.recognize_google(audio)
     except Exception as exp:
         print(exp)
 
@@ -61,5 +64,7 @@ def speech_recognition():
     # num : anzahl von links
     # stop : anzahl wo programm aufhoert
     # pause : warten
+
+
 def get_links_from_google(query):
     return search(query, tld="com", num=10, stop=10, pause=3)
