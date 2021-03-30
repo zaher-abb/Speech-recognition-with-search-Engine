@@ -80,7 +80,7 @@ def get_links_from_google(query):
 
 # here to filter the text from stoped word that is not important like ..to..on ..for.. from ...... .
 # function will return a list
-def filter_clean_text(spoken_text):
+def clean_stopwords(spoken_text):
     unwanted_words = set(stopwords.words("english") or stopwords.words("german"))
     wanted_words = []
     #     = [x for x in word_tokenize(spoken_text) if x not in unwanted_words]
@@ -96,7 +96,7 @@ def filter_clean_text(spoken_text):
 def get_searched_words_and_sentence(spoken_text):
     punctuations = '''!()-[]{};:'"\,<>./?@#$%^&*_~'''
     most_commen_wordslist = []
-    temp_test = filter_clean_text(spoken_text)
+    temp_test = clean_stopwords(spoken_text)
 
     for i in temp_test:
         temp = temp_test.count(i)
