@@ -21,6 +21,14 @@ a:hover, a:active {
 <body>
 
 
+
+<h2>your Meeting Topic are : </h2>
+<p>{{spoken_text}}</p>
+{% for link in links %}
+<a href="{{ link }}">{{ link }}</a>
+{% endfor %}
+
+
 <h2>your Text is : </h2>
 <p>{{spoken_text}}</p>
 

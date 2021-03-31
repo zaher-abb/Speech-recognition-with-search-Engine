@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-<html>
 <head>
 <style>
 .button {
@@ -21,11 +20,16 @@
 </head>
 <body>
 
-<h1>Start with recording your voice </h1>
-<!DOCTYPE html>
-<html>
-<body>
+<h1>Meeting Topic </h1>
+<p>Please select your Topic for the meeting:</p>
+<form action="addTopic">
+      {% csrf_token %}
 
+    <input type="text" name="topic" >
+ <input class="button button2" type="submit" value="submit">add Topic</input>
+</form>
+
+<h1>Start with recording your voice </h1>
 
 <form action="voice_recorder_page">
       {% csrf_token %}
