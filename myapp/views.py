@@ -131,13 +131,12 @@ def addTopic(request):
 
 
 def read_text_of_website(url_list):
+    for i in url_list :
 
-    url='https://www.cdc.gov/coronavirus/2019-ncov/symptoms-testing/testing.html'
+        soup = BeautifulSoup(urlopen(i).read())
 
-    soup = BeautifulSoup(urlopen(url).read())
+        for script in soup(["script", "style"]):
 
-    for script in soup(["script", "style"]):
+            script.decompose()
 
-        script.decompose()
-
-    return ' '.join(list(soup.stripped_strings))
+        return ' '.join(list(soup.stripped_strings))
