@@ -1,3 +1,4 @@
+from urllib import request
 from urllib.request import urlopen
 
 from bs4 import BeautifulSoup
@@ -9,22 +10,22 @@ from googlesearch import search
 from nltk.corpus import stopwords
 from nltk import sent_tokenize
 from nltk import word_tokenize
-import threading
 
 topic_list = []
 
 
-def voice_recorder_HomePage(request):
+
+def view_homePage(request):
     return render(request, 'voice.html')
 
-
+# TODO : vesuchen die Aufnehmen zum teilen 10 min
 def start_recording(request):
     # Sampling frequency
     freq = 44100
 
     # Recording duration
     duration = int(request.GET['Duration'])
-    language = request.GET['language']
+
     # Start recorder with the given values
     # of duration and sample frequency
     recording = sd.rec(int(duration * freq), samplerate=freq, channels=2)
@@ -35,55 +36,58 @@ def start_recording(request):
     wavio.write("myrecording.wav", recording, freq, sampwidth=2)
 
     # speech_recognition
-    spoken_text = speech_recognition(language)
 
-    # words_list = get_searched_words_and_sentence(spoken_text)
-    #
-    # links_list = []
-    #
-    # for i in words_list:
-    #     links = list(search(i, tld="com", num=10, stop=10, pause=3))
-    #     links_list += links
-    # print(words_list)
-    # return render(request, 'test.html', {'spoken_text': spoken_text, 'links': links_list})
-    return get_links_from_google(spoken_text, request)
+    # return get_links_from_google(spoken_text, request)
 
 
 def speech_recognition(language):
     r = sr.Recognizer()
-    myaudio = sr.AudioFile('myrecording.wav')
-    with myaudio as source:
+    audio = sr.AudioFile('myrecording.wav')
+    with audio as source:
         audio = r.record(source)
-    mytext = ''
+    text = ''
     try:
-        if (language == 'Deutsch'):
-            mytext = r.recognize_google(audio, language='de-DE')
-        elif ((language == 'English')):
-            mytext = r.recognize_google(audio)
+        if language == 'Deutsch':
+            text = r.recognize_google(audio, language='de-DE')
+        elif language == 'English':
+            text = r.recognize_google(audio)
     except Exception as exp:
         print(exp)
 
-    return mytext
-
-    # from googlesearch import search
-    # query : anfrage String
-    # tld :  Domain Suchen
-    # num : anzahl von links
-    # stop : anzahl wo programm aufhoert
-    # pause : warten
+    return text
 
 
 def get_links_from_google(spoken_text, request):
-    words_list = get_searched_words_and_sentence(spoken_text)
-    words_list += topic_list
+    words_list = spoken_text
     links_list = []
 
     for i in words_list:
         links = list(search(i, tld="com", num=10, stop=5, pause=3))
         links_list += links
-    print(words_list)
-    print(read_text_of_website(links_list))
+
+    # print(words_list)
+    # print(read_text_of_website(links_list))
+    return links_list
+
+
+def fetch_topic_result(request):
+    spoken_text=topic_list
+    links_list = get_links_from_google(spoken_text, request)
+
+    global language
+    language=request.GET['language']
+
+    start_recording(request)
     return render(request, 'test.html', {'spoken_text': spoken_text, 'links': links_list})
+
+
+# TODO: text muss noch ausgewertet mit haufigkeit
+def fetch_voice_recorde_result(request):
+
+    spoken_text = clean_stopwords(speech_recognition(language))
+
+    links_list = get_links_from_google(spoken_text, request)
+    return render(request, 'test2.html', {'spoken_text': spoken_text, 'links': links_list})
 
 
 # here to filter the text from stoped word that is not important like ..to..on ..for.. from ...... .
@@ -101,6 +105,8 @@ def clean_stopwords(spoken_text):
 
 
 # will return List of the most commend words in the text and complete sentence from the text
+
+# TODO: check if this methode still needed
 def get_searched_words_and_sentence(spoken_text):
     punctuations = '''!()-[]{};:'"\,<>./?@#$%^&*_~'''
     most_common_wordlist = []
@@ -122,21 +128,13 @@ def addTopic(request):
 
     return render(request, 'voice.html')
 
-# Implement a for loop and pass a list containing the
-# string tags script and style into the Beautiful Soup object as the sequence.
-# with  bs4.BeautifulSoup.decompose().
-# Pass the bs4.BeautifulSoup.stripped_strings
-# generator into list(generator) to return a list of the remaining
-# string text in the html object.
 
+# Implement a for loop and pass a list containing the string tags script and style into the Beautiful Soup object as the sequence. with  bs4.BeautifulSoup.decompose().
+# Pass the bs4.BeautifulSoup.stripped_strings generator into list(generator) to return a list of the remaining string text in the html object.
 
-def read_text_of_website(url_list):
-    for i in url_list :
+def read_text_of_website(url):
+    soup = BeautifulSoup(urlopen(url).read())
+    for script in soup(["script", "style"]):
+        script.decompose()
 
-        soup = BeautifulSoup(urlopen(i).read())
-
-        for script in soup(["script", "style"]):
-
-            script.decompose()
-
-        return ' '.join(list(soup.stripped_strings))
+    return ' '.join(list(soup.stripped_strings))

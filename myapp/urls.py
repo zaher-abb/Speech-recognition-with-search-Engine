@@ -7,7 +7,8 @@ app_name = 'speech_recognition'
 
 
 urlpatterns = [
-    path('HomePage', views.voice_recorder_HomePage, name='voice_recorder_HomePage'),
-    path('voice_recorder_page', views.start_recording, name='voice_recorder'),
+    path('HomePage', views.view_homePage, name='voice_recorder_HomePage'),
+    path('voice_topic_result', views.fetch_topic_result, name='voice_topic_result'),
+    path('voice_recorde_result', views.fetch_voice_recorde_result, name='voice_recorde_result'),
     path('addTopic', views.addTopic, name='addTopic'),
 ]

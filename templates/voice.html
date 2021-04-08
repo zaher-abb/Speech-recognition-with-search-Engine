@@ -31,15 +31,15 @@
 
 <h1>Start with recording your voice </h1>
 
-<form action="voice_recorder_page">
+<form action="voice_topic_result">
       {% csrf_token %}
 
   <p>Please select your language:</p>
-  <input type="radio" id="English" name="language" value="English" required>
+  <input type="radio" id="English" name="language" value="English" >
   <label for="English">English</label><br>
   <input type="radio" id="Deutsch" name="language" value="Deutsch">
   <label for="Deutsch">Deutsch</label><br>
-    <input type="number" name="Duration" >
+    <input type="number" name="Duration" required>
  <input class="button button2" type="submit" value="Submit">start recording </input>
 
 </form>
