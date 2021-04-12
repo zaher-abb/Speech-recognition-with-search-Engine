@@ -14,9 +14,9 @@ from nltk import word_tokenize
 topic_list = []
 
 
-
 def view_homePage(request):
     return render(request, 'voice.html')
+
 
 # TODO : vesuchen die Aufnehmen zum teilen 10 min
 def start_recording(request):
@@ -56,34 +56,30 @@ def speech_recognition(language):
 
     return text
 
-
+# TODO : create static search links for rendering performance
 def get_links_from_google(spoken_text, request):
-    words_list = spoken_text
+    words_list = list(set(spoken_text))
     links_list = []
 
     for i in words_list:
         links = list(search(i, tld="com", num=10, stop=5, pause=3))
         links_list += links
-
+    return links_list
     # print(words_list)
     # print(read_text_of_website(links_list))
-    return links_list
 
 
 def fetch_topic_result(request):
-    spoken_text=topic_list
+    spoken_text = list(set(topic_list))
     links_list = get_links_from_google(spoken_text, request)
 
-    global language
-    language=request.GET['language']
-
-    start_recording(request)
     return render(request, 'test.html', {'spoken_text': spoken_text, 'links': links_list})
 
 
 # TODO: text muss noch ausgewertet mit haufigkeit
 def fetch_voice_recorde_result(request):
-
+    language = request.GET['language']
+    start_recording(request)
     spoken_text = clean_stopwords(speech_recognition(language))
 
     links_list = get_links_from_google(spoken_text, request)
@@ -123,10 +119,11 @@ def get_searched_words_and_sentence(spoken_text):
     return most_common_wordlist + sentence_list
 
 
-def addTopic(request):
+def add_topic_and_fetch_topic_result(request):
     topic_list.append(request.GET['topic'])
-
-    return render(request, 'voice.html')
+    spoken_text = topic_list
+    links_list = get_links_from_google(spoken_text, request)
+    return render(request, 'voice.html', {'spoken_text': spoken_text, 'links': links_list})
 
 
 # Implement a for loop and pass a list containing the string tags script and style into the Beautiful Soup object as the sequence. with  bs4.BeautifulSoup.decompose().
