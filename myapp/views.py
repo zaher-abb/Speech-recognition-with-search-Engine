@@ -12,6 +12,7 @@ from nltk import sent_tokenize
 from nltk import word_tokenize
 
 topic_list = []
+static_links_list = []
 
 
 def view_homePage(request):
@@ -56,17 +57,21 @@ def speech_recognition(language):
 
     return text
 
-# TODO : create static search links for rendering performance
-def get_links_from_google(spoken_text, request):
-    words_list = list(set(spoken_text))
-    links_list = []
 
-    for i in words_list:
-        links = list(search(i, tld="com", num=10, stop=5, pause=3))
-        links_list += links
-    return links_list
+# TODO : create static search links for rendering performance
+def get_links_from_google(searched_text, request):
+    # to  avoid a duplicated result from search
+    # # words_list = list(set(searched_text))
     # print(words_list)
-    # print(read_text_of_website(links_list))
+    searched_word = searched_text[-1]
+
+    if topic_list.count(searched_word) == 1 :
+        print(topic_list.count(searched_word))
+        links = list(search(searched_word, tld="com", num=10, stop=5, pause=3))
+        static_links_list.append(links)
+        return static_links_list
+    else:
+        return static_links_list
 
 
 def fetch_topic_result(request):
@@ -86,7 +91,7 @@ def fetch_voice_recorde_result(request):
     return render(request, 'test2.html', {'spoken_text': spoken_text, 'links': links_list})
 
 
-# here to filter the text from stoped word that is not important like ..to..on ..for.. from ...... .
+# here to filter the text from stopped word that is not important like ..to..on ..for.. from ...... .
 # function will return a list
 def clean_stopwords(spoken_text):
     unwanted_words = set(stopwords.words("english") or stopwords.words("german"))
@@ -119,10 +124,13 @@ def get_searched_words_and_sentence(spoken_text):
     return most_common_wordlist + sentence_list
 
 
+# add topic to the Static list  " topic_list " and fetch result by rendering the page
 def add_topic_and_fetch_topic_result(request):
     topic_list.append(request.GET['topic'])
-    spoken_text = topic_list
-    links_list = get_links_from_google(spoken_text, request)
+    spoken_text = list(set(topic_list))
+    links_list = get_links_from_google(topic_list, request)
+    print(links_list)
+    print(topic_list)
     return render(request, 'voice.html', {'spoken_text': spoken_text, 'links': links_list})
 
 
