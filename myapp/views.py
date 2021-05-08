@@ -67,8 +67,9 @@ def get_links_from_google(searched_text, request):
 
     if topic_list.count(searched_word) == 1 :
         print(topic_list.count(searched_word))
-        links = list(search(searched_word, tld="com", num=10, stop=5, pause=3))
-        static_links_list.append(links)
+        links = search(searched_word, tld="com", num=10, stop=5, pause=3)
+        for i in links :
+           static_links_list.append(i)
         return static_links_list
     else:
         return static_links_list
@@ -77,7 +78,7 @@ def get_links_from_google(searched_text, request):
 def fetch_topic_result(request):
     spoken_text = list(set(topic_list))
     links_list = get_links_from_google(spoken_text, request)
-
+    list(links_list)
     return render(request, 'test.html', {'spoken_text': spoken_text, 'links': links_list})
 
 
@@ -129,8 +130,9 @@ def add_topic_and_fetch_topic_result(request):
     topic_list.append(request.GET['topic'])
     spoken_text = list(set(topic_list))
     links_list = get_links_from_google(topic_list, request)
-    print(links_list)
-    print(topic_list)
+  
+    list(links_list)
+
     return render(request, 'voice.html', {'spoken_text': spoken_text, 'links': links_list})
 
 

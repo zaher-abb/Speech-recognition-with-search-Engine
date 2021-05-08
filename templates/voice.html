@@ -61,15 +61,13 @@ tr:nth-child(even) {
 <p>{{spoken_text}}</p>
 
 
-<table class="table">
-    <thead class="thead-dark">
 
-    <tr>
+
         <th>Link</th>
-    </tr>
-     <tr>{% for link in links %}
-    <td><a href="{{ link }}">{{ link }}</a></td>
-  </tr>
+
+   {% for link in links %}
+       <a href="{{ link }}">{{ link }}</a>
+
 {% endfor %}
 
 
