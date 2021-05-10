@@ -58,15 +58,12 @@ def speech_recognition(language):
     return text
 
 
-# TODO : create static search links for rendering performance
-def get_links_from_google(searched_text, request):
-    # to  avoid a duplicated result from search
-    # # words_list = list(set(searched_text))
-    # print(words_list)
-    searched_word = searched_text[-1]
 
+def get_links_from_google(searched_text, request):
+
+    searched_word = searched_text[-1]
     if topic_list.count(searched_word) == 1 :
-        print(topic_list.count(searched_word))
+
         links = search(searched_word, tld="com", num=10, stop=5, pause=3)
         for i in links :
            static_links_list.append(i)
@@ -78,17 +75,21 @@ def get_links_from_google(searched_text, request):
 def fetch_topic_result(request):
     spoken_text = list(set(topic_list))
     links_list = get_links_from_google(spoken_text, request)
-    list(links_list)
+
     return render(request, 'test.html', {'spoken_text': spoken_text, 'links': links_list})
 
 
 # TODO: text muss noch ausgewertet mit haufigkeit
 def fetch_voice_recorde_result(request):
+    links_list=[]
     language = request.GET['language']
     start_recording(request)
     spoken_text = clean_stopwords(speech_recognition(language))
+    print(spoken_text)
+    for word in get_searched_words_and_sentence(speech_recognition(language)):
+       links_list += search(word, tld="com", num=10, stop=5, pause=3)
 
-    links_list = get_links_from_google(spoken_text, request)
+
     return render(request, 'test2.html', {'spoken_text': spoken_text, 'links': links_list})
 
 
@@ -97,8 +98,6 @@ def fetch_voice_recorde_result(request):
 def clean_stopwords(spoken_text):
     unwanted_words = set(stopwords.words("english") or stopwords.words("german"))
     wanted_words = []
-    #     = [x for x in word_tokenize(spoken_text) if x not in unwanted_words]
-
     for word in word_tokenize(spoken_text):
         if word not in unwanted_words:
             wanted_words.append(word)
@@ -130,7 +129,7 @@ def add_topic_and_fetch_topic_result(request):
     topic_list.append(request.GET['topic'])
     spoken_text = list(set(topic_list))
     links_list = get_links_from_google(topic_list, request)
-  
+
     list(links_list)
 
     return render(request, 'voice.html', {'spoken_text': spoken_text, 'links': links_list})
