@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <style>
+
 .button {
   border: none;
   color: white;
@@ -12,6 +13,7 @@
   font-size: 16px;
   margin: 4px 2px;
   cursor: pointer;
+
 }
 table {
   font-family: arial, sans-serif;
@@ -31,6 +33,7 @@ tr:nth-child(even) {
 
 .button1 {background-color: #4CAF50;} /* Green */
 .button2 {background-color: orangered;} /* orange read */
+
 </style>
 </head>
 <body>
@@ -41,10 +44,10 @@ tr:nth-child(even) {
       {% csrf_token %}
 
     <input type="text" name="topic" >
- <input class="button button2" type="submit" value="submit">add Topic</input>
+ <input class="button button2" type="submit" value="add Topic"></input>
 </form>
 
-<h1>Start with recording your voice </h1>
+<h1>Start recording  </h1>
 
 <form action="voice_recorde_result">
       {% csrf_token %}
@@ -55,7 +58,7 @@ tr:nth-child(even) {
   <input type="radio" id="Deutsch" name="language" value="Deutsch">
   <label for="Deutsch">Deutsch</label><br>
     <input type="number" name="Duration" required>
- <input class="button button2" type="submit" value="Submit">start recording </input>
+ <input class="button button2" type="submit" value="start recording"> </input>
 
 <h2>your recorde result are : </h2>
 <p>{{spoken_text}}</p>
@@ -75,7 +78,8 @@ tr:nth-child(even) {
 
 
 <a href="{% url 'speech_recognition:voice_recorder_HomePage' %}" target="_blank">New Recorde </a>
-
+    </thead>
+</table>
 
 </form>
 </body>

@@ -8,6 +8,8 @@ import speech_recognition as sr
 import wavio
 from googlesearch import search
 from nltk.corpus import stopwords
+
+
 from nltk import sent_tokenize
 from nltk import word_tokenize
 
@@ -72,11 +74,6 @@ def get_links_from_google(searched_text, request):
         return static_links_list
 
 
-def fetch_topic_result(request):
-    spoken_text = list(set(topic_list))
-    links_list = get_links_from_google(spoken_text, request)
-
-    return render(request, 'test.html', {'spoken_text': spoken_text, 'links': links_list})
 
 
 # TODO: text muss noch ausgewertet mit haufigkeit
@@ -84,6 +81,8 @@ def fetch_voice_recorde_result(request):
     links_list=[]
     language = request.GET['language']
     start_recording(request)
+    print(speech_recognition(language))
+
     spoken_text = clean_stopwords(speech_recognition(language))
     print(spoken_text)
     for word in get_searched_words_and_sentence(speech_recognition(language)):
@@ -96,7 +95,8 @@ def fetch_voice_recorde_result(request):
 # here to filter the text from stopped word that is not important like ..to..on ..for.. from ...... .
 # function will return a list
 def clean_stopwords(spoken_text):
-    unwanted_words = set(stopwords.words("english") or stopwords.words("german"))
+    unwanted_words = set(stopwords.words("english") and stopwords.words("german"))
+
     wanted_words = []
     for word in word_tokenize(spoken_text):
         if word not in unwanted_words:
@@ -107,7 +107,6 @@ def clean_stopwords(spoken_text):
 
 # will return List of the most commend words in the text and complete sentence from the text
 
-# TODO: check if this methode still needed
 def get_searched_words_and_sentence(spoken_text):
     punctuations = '''!()-[]{};:'"\,<>./?@#$%^&*_~'''
     most_common_wordlist = []
@@ -123,13 +122,21 @@ def get_searched_words_and_sentence(spoken_text):
 
     return most_common_wordlist + sentence_list
 
+# TODO: Delete
+#
+# def fetch_topic_result(request):
+#     spoken_text = list(set(topic_list))
+#     links_list = get_links_from_google(spoken_text, request)
+#
+#     return render(request, 'test.html', {'spoken_text': spoken_text, 'links': links_list})
+#
 
 # add topic to the Static list  " topic_list " and fetch result by rendering the page
 def add_topic_and_fetch_topic_result(request):
     topic_list.append(request.GET['topic'])
     spoken_text = list(set(topic_list))
     links_list = get_links_from_google(topic_list, request)
-
+    print(stopwords.words("german"))
     list(links_list)
 
     return render(request, 'voice.html', {'spoken_text': spoken_text, 'links': links_list})
