@@ -59,7 +59,10 @@ tr:nth-child(even) {
   <label for="Deutsch">Deutsch</label><br>
     <input type="number" name="Duration" required>
  <input class="button button2" type="submit" value="start recording"> </input>
+<hr>
 
+<a href="{% url 'speech_recognition:viewpager' %}" class="btn btn-primary btn-lg disabled" role="button" aria-disabled="true">Find Your lead user</a>
+<hr>
 <h2>your recorde result are : </h2>
 <p>{{spoken_text}}</p>
 
@@ -69,11 +72,20 @@ tr:nth-child(even) {
 
     <tr>
         <th>Link</th>
-    </tr>
-     <tr>{% for link in links %}
-    <td><a href="{{ link }}">{{ link }}</a></td>
-  </tr>
-{% endfor %}
+         <th>Lead user</th>
+         <th>User score </th>
+
+   </tr>
+        {% for url ,leaduser,userscore in zibList %}
+    <tr>
+        <td><a href="{{ url }}">{{ url }}</a></td>
+        <td>{{ leaduser }}</td>
+        <td>{{ userscore }}</td>
+
+
+
+     </tr>
+  {% endfor %}
 
 
 
