@@ -1,8 +1,5 @@
 import sys
-from urllib import request
 from urllib.request import urlopen
-
-import nltk
 from bs4 import BeautifulSoup
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
@@ -16,8 +13,8 @@ from google_trans_new import google_translator
 import gzip
 import json
 import pandas as df
-from nltk import sent_tokenize, pos_tag, WordNetLemmatizer
-from nltk import word_tokenize
+from nltk import sent_tokenize, pos_tag, WordNetLemmatizer,word_tokenize
+
 from wordfreq import word_frequency
 
 topic_list = []
@@ -144,7 +141,7 @@ def clean_stopwords(spoken_text, request):
 
 def important_words(text,request):
 
-    words = nltk.word_tokenize(text)
+    words = word_tokenize(text)
     length = len(words)
     language = code_of(request.GET['language'])
 
